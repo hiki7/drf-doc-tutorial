@@ -30,9 +30,11 @@ from django.contrib.auth.models import User
 #Implementation using ModelSerializer
 
 class SnippetSerializer(serializers.ModelSerializer):
+    #source parameter specifies that this field should use the username attribute of the related owner object
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Snippet
-        fields = ['id', 'title', 'code', 'linenos', 'language', 'style']
+        fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
 
 class UserSerializer(serializers.ModelSerializer):
     #we need to explicitly define snippets field, because it is a reverse relationship on the User model and it is not included by default

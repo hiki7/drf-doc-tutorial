@@ -1,7 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import api_root, SnippetViewSet, UserViewSet
+# from .views import api_root, SnippetViewSet, UserViewSet
 from rest_framework import renderers
+from rest_framework.routers import DefaultRouter
+from . import views
 
 # urlpatterns = [
 #     path('', views.api_root),
@@ -46,3 +48,12 @@ from rest_framework import renderers
 #     path('users/<int:pk>/', user_detail, name='user-detail')
 # ])
 
+
+#use of Router class
+router = DefaultRouter()
+router.register(r'snippets', views.SnippetViewSet, basename='snippet')
+router.register(r'users', views.UserViewSet, basename='user')
+
+urlpatterns = [
+    path('', include(router.urls)), #The API URLs are automatically determined by the router
+]

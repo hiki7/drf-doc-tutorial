@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse, Http404
 from rest_framework.reverse import reverse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from rest_framework import status, mixins, generics, permissions, renderers
+from rest_framework import status, mixins, generics, permissions, renderers, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -201,14 +201,14 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserList(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#
+#
+# class UserDetail(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 @api_view(['GET'])
@@ -226,3 +226,11 @@ class SnippetHighlight(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `retrieve` actions.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

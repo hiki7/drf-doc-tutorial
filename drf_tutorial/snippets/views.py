@@ -228,7 +228,7 @@ def api_root(request, format=None):
 #         return Response(snippet.highlighted)
 
 
-class SnippetViewSet(viewsets.ModelViewSet):
+class SnippetViewSet(viewsets.ModelViewSet): #ModelViewSet provides full set of actions
     """
     This ViewSet automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
@@ -250,7 +250,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet): #ReadOnlyModelViewSet provide retrieve and list actions
     """
     This viewset automatically provides `list` and `retrieve` actions.
     """

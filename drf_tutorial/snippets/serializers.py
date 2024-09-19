@@ -29,17 +29,36 @@ from django.contrib.auth.models import User
 
 #Implementation using ModelSerializer
 
-class SnippetSerializer(serializers.ModelSerializer):
-    #source parameter specifies that this field should use the username attribute of the related owner object
+# class SnippetSerializer(serializers.ModelSerializer):
+#     #source parameter specifies that this field should use the username attribute of the related owner object
+#     owner = serializers.ReadOnlyField(source='owner.username')
+#     class Meta:
+#         model = Snippet
+#         fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
+#
+# class UserSerializer(serializers.ModelSerializer):
+#     #we need to explicitly define snippets field, because it is a reverse relationship on the User model and it is not included by default
+#     snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+#
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username', 'snippets']
+
+
+#implemetantion using hyperlink
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    hightlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+
     class Meta:
         model = Snippet
-        fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
+        fields = ['url', 'id', 'highlight', 'owner',
+                  'title', 'code', 'linenos', 'language', 'style']
 
-class UserSerializer(serializers.ModelSerializer):
-    #we need to explicitly define snippets field, because it is a reverse relationship on the User model and it is not included by default
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'snippets']
+        fields = ['url', 'id', 'username', 'snippets']
